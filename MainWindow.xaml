@@ -12,7 +12,7 @@
         <Button x:Name="Button_JSON_open" Content="Open" HorizontalAlignment="Right" Height="20" Margin="0,4,8,0" VerticalAlignment="Top" Width="54" Click="Button_JSON_open_Click"/>
         <Label Content="TTS Mod folder" HorizontalAlignment="Left" Margin="10,26,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="TB_mod_folder_path" Height="20" Margin="107,30,62,0" TextWrapping="Wrap" Text="C:\Users\__\Documents\My Games\Tabletop Simulator\Mods" VerticalAlignment="Top"/>
-        <Button x:Name="Button_mods_open" Content="Open" HorizontalAlignment="Right" Height="20" Margin="0,30,8,0" VerticalAlignment="Top" Width="54"/>
+        <Button x:Name="Button_mods_open" Content="Open" HorizontalAlignment="Right" Height="20" Margin="0,30,8,0" VerticalAlignment="Top" Width="54" Click="Button_mods_open_Click"/>
         <Button x:Name="Button_Backup_Images" Content="Backup Images" HorizontalAlignment="Left" Margin="210,52,0,0" VerticalAlignment="Top" Width="95"/>
         <DataGrid HorizontalAlignment="Left" Height="782" Margin="10,77,0,0" VerticalAlignment="Top" Width="800"/>
         <Button x:Name="Button_load" Content="Load" HorizontalAlignment="Left" Margin="10,52,0,0" VerticalAlignment="Top" Width="95"/>
