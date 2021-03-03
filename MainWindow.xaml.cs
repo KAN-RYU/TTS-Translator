@@ -80,12 +80,18 @@ namespace TTS_Translator
                         }
                     }
                 }
-                System.Console.WriteLine(string.Join("\n", urls.ToArray()));
+                //System.Console.WriteLine(string.Join("\n", urls.ToArray()));
                 DataTable dt = new DataTable();
 
                 dt.Columns.Add("#", typeof(int));
                 dt.Columns.Add("Original", typeof(string));
                 dt.Columns.Add("New", typeof(string));
+                string[] ua = urls.ToArray();
+                for (int idx = 0; idx < urls.Count(); idx++)
+                {
+                    dt.Rows.Add(new string[] { idx.ToString(), ua[idx], "" });
+                }
+                URLtable.ItemsSource = dt.DefaultView;
             }
         }
 
