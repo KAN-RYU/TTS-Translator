@@ -12,6 +12,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.IO;
+using System.Data;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace TTS_Translator
 {
@@ -29,6 +33,7 @@ namespace TTS_Translator
 
         private void Button_JSON_open_Click(object sender, RoutedEventArgs e)
         {
+            //Open save json and parsing
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
 
             dlg.DefaultExt = ".json";
@@ -41,6 +46,46 @@ namespace TTS_Translator
             {
                 string filename = dlg.FileName;
                 TB_JSON_path.Text = filename;
+            }
+
+            using (StreamReader jsonSave = File.OpenText(TB_JSON_path.Text))
+            using (JsonTextReader reader = new JsonTextReader(jsonSave))
+            {
+                JObject jsonO = (JObject)JToken.ReadFrom(reader);
+                JArray Objects = (JArray)jsonO["ObjectStates"];
+
+                SortedSet<string> urls = new SortedSet<string>();
+
+                foreach(JObject ob in Objects)
+                {
+                    if (ob["Name"].ToString().Equals("Custom_Tile"))
+                    {
+                        JObject tmp = (JObject)ob["CustomImage"];
+                        urls.Add(tmp["ImageURL"].ToString());
+                        urls.Add(tmp["ImageSecondaryURL"].ToString());
+                    }
+                    else if (ob["Name"].ToString().Equals("Custom_Token"))
+                    {
+                        JObject tmp = (JObject)ob["CustomImage"];
+                        urls.Add(tmp["ImageURL"].ToString());
+                    }
+                    else if (ob["Name"].ToString().Equals("Deck") || ob["Name"].ToString().Equals("DeckCustom"))
+                    {
+                        foreach (var x in (JObject)ob["CustomDeck"])
+                        {
+                            string name = x.Key;
+                            JObject tmp = (JObject)x.Value;
+                            urls.Add(tmp["FaceURL"].ToString());
+                            urls.Add(tmp["BackURL"].ToString());
+                        }
+                    }
+                }
+                System.Console.WriteLine(string.Join("\n", urls.ToArray()));
+                DataTable dt = new DataTable();
+
+                dt.Columns.Add("#", typeof(int));
+                dt.Columns.Add("Original", typeof(string));
+                dt.Columns.Add("New", typeof(string));
             }
         }
 
