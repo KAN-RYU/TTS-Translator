@@ -14,11 +14,13 @@
         <TextBox x:Name="TB_mod_folder_path" Height="20" Margin="107,30,62,0" TextWrapping="Wrap" Text="C:\Users\__\Documents\My Games\Tabletop Simulator\Mods" VerticalAlignment="Top"/>
         <Button x:Name="Button_mods_open" Content="Open" HorizontalAlignment="Right" Height="20" Margin="0,30,8,0" VerticalAlignment="Top" Width="54" Click="Button_mods_open_Click"/>
         <Button x:Name="Button_Backup_Images" Content="Backup Images" HorizontalAlignment="Left" Margin="210,52,0,0" VerticalAlignment="Top" Width="95"/>
-        <DataGrid x:Name="URLtable" HorizontalAlignment="Left" Height="782" Margin="10,77,0,0" VerticalAlignment="Top" Width="800"/>
+        <DataGrid x:Name="URLtable" HorizontalAlignment="Left" Margin="10,77,0,10" Width="800" SelectionChanged="URLtable_SelectionChanged"/>
         <Button x:Name="Button_load" Content="Load" HorizontalAlignment="Left" Margin="10,52,0,0" VerticalAlignment="Top" Width="95"/>
         <Button x:Name="Button_Save" Content="Save" HorizontalAlignment="Left" Margin="110,52,0,0" VerticalAlignment="Top" Width="95"/>
-        <Image HorizontalAlignment="Left" Height="370" Margin="815,77,0,0" VerticalAlignment="Top" Width="767"/>
-        <Image HorizontalAlignment="Left" Height="370" Margin="815,489,0,0" VerticalAlignment="Top" Width="767"/>
         <Button x:Name="Button_Export" Content="Export" HorizontalAlignment="Left" Margin="310,52,0,0" VerticalAlignment="Top" Width="95"/>
+        <StackPanel Margin="815,77,10,10">
+            <Image x:Name="Image_Original" VerticalAlignment="Top" Height="370"/>
+            <Image x:Name="Image_New" VerticalAlignment="Bottom" Height="401" Margin="0,10,0,0"/>
+        </StackPanel>
     </Grid>
 </Window>

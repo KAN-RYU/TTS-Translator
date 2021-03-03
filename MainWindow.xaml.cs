@@ -28,7 +28,8 @@ namespace TTS_Translator
         {
             InitializeComponent();
             TB_JSON_path.Text = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\My Games\Tabletop Simulator\Saves";
-            TB_mod_folder_path.Text = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\My Games\Tabletop Simulator\Mods";
+            //TB_mod_folder_path.Text = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\My Games\Tabletop Simulator\Mods";
+            TB_mod_folder_path.Text = @"F:\SteamLibrary\steamapps\common\Tabletop Simulator\Tabletop Simulator_Data\Mods";
         }
 
         private void Button_JSON_open_Click(object sender, RoutedEventArgs e)
@@ -112,6 +113,40 @@ namespace TTS_Translator
                 string folderpath = System.IO.Path.GetDirectoryName(dlg.FileName);
                 TB_mod_folder_path.Text = folderpath;
             }
+        }
+
+        private void URLtable_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            string deleteSpecial(string s)
+            {
+                return s.Replace(":", "").Replace("/", "").Replace("-", "").Replace("=", "").Replace("?", "").Replace(".", "");
+            }
+            Image_Original.Source = new BitmapImage();
+
+            try
+            {
+                DataRowView row = (DataRowView)URLtable.SelectedItems[0];
+                try
+                {
+                    Image_Original.Source = new BitmapImage(new Uri(TB_mod_folder_path.Text + @"\Images\" + deleteSpecial(row["original"].ToString()) + ".png", UriKind.Absolute));
+                }
+                catch (FileNotFoundException)
+                {
+                    try
+                    {
+                        Image_Original.Source = new BitmapImage(new Uri(TB_mod_folder_path.Text + @"\Images\" + deleteSpecial(row["original"].ToString()) + ".jpg", UriKind.Absolute));
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        Image_Original.Source = new BitmapImage();
+                    }
+                }
+            }
+            catch(InvalidCastException)
+            {
+                return;
+            }
+            
         }
     }
 }
