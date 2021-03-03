@@ -43,5 +43,24 @@ namespace TTS_Translator
                 TB_JSON_path.Text = filename;
             }
         }
+
+        private void Button_mods_open_Click(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+
+            dlg.InitialDirectory = TB_mod_folder_path.Text;
+            dlg.ValidateNames = false;
+            dlg.CheckFileExists = false;
+            dlg.CheckPathExists = true;
+            dlg.FileName = "Select Folder";
+
+            Nullable<bool> result = dlg.ShowDialog();
+
+            if (result == true)
+            {
+                string folderpath = System.IO.Path.GetDirectoryName(dlg.FileName);
+                TB_mod_folder_path.Text = folderpath;
+            }
+        }
     }
 }
