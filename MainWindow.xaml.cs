@@ -139,13 +139,22 @@ namespace TTS_Translator
             Image_Original.Source = new BitmapImage();
             Image_New.Source = new BitmapImage();
 
-            DataRowView row = (DataRowView)URLtable.SelectedItems[0];
+            DataRowView row;
+            try
+            {
+                row = (DataRowView)URLtable.SelectedItems[0];
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return;
+            }
+            
             try
             {
                 string[] files = Directory.GetFiles(TB_mod_folder_path.Text + @"\Images\", deleteSpecial(row["original"].ToString()) + ".*");
                 Image_Original.Source = new BitmapImage(new Uri(files[0], UriKind.Absolute));
             }
-            catch (FileNotFoundException)
+            catch
             {
                 Image_Original.Source = new BitmapImage();
             }
@@ -298,9 +307,16 @@ namespace TTS_Translator
                 ProgressB.Maximum = URLtable.Items.Count;
                 foreach (DataRowView s in URLtable.Items)
                 {
-                    string[] files = Directory.GetFiles(TB_mod_folder_path.Text + @"\Images\", deleteSpecial(s["original"].ToString()) + ".*");
-                    File.Copy(files[0], folderpath + @"\" + Path.GetFileName(files[0]), true);
-                    ProgressB.Value += 1;
+                    try
+                    {
+                        string[] files = Directory.GetFiles(TB_mod_folder_path.Text + @"\Images\", deleteSpecial(s["original"].ToString()) + ".*");
+                        File.Copy(files[0], folderpath + @"\" + Path.GetFileName(files[0]), true);
+                        ProgressB.Value += 1;
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        ProgressB.Value += 1;
+                    }
                 }
             }
         }
@@ -336,6 +352,28 @@ namespace TTS_Translator
                     File.WriteAllText(dlg.FileName, saveData);
                 }
             }
+        }
+
+        private void Button_Analyze_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (DataRowView s in URLtable.ItemsSource)
+            {
+                try
+                {
+                    string[] files = Directory.GetFiles(TB_mod_folder_path.Text + @"\Images\", deleteSpecial(s["original"].ToString()) + ".*");
+                    DataGridRow dgr = URLtable.ItemContainerGenerator.ContainerFromItem(s) as DataGridRow;
+                    dgr.Background = System.Windows.Media.Brushes.Green;
+                    if (files.Length == 0)
+                    {
+                        dgr.Background = System.Windows.Media.Brushes.Red;
+                    }
+                }
+                catch
+                {
+                    return;
+                }
+            }
+            
         }
     }
 }
