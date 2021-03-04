@@ -155,7 +155,6 @@ namespace TTS_Translator
             {
                 try
                 {
-                    System.Console.WriteLine(row["New"].ToString());
                     Image_New.Source = new BitmapImage(new Uri(row["New"].ToString(), UriKind.Absolute));
                 }
                 catch (FileNotFoundException)
