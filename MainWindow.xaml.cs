@@ -25,9 +25,9 @@ namespace TTS_Translator
             TB_mod_folder_path.Text = @"F:\SteamLibrary\steamapps\common\Tabletop Simulator\Tabletop Simulator_Data\Mods";
         }
 
+        //Open save json and parsing
         private void Button_JSON_open_Click(object sender, RoutedEventArgs e)
         {
-            //Open save json and parsing
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog
             {
                 DefaultExt = ".json",
@@ -101,6 +101,7 @@ namespace TTS_Translator
             }
         }
 
+        //Select mods folder
         private void Button_mods_open_Click(object sender, RoutedEventArgs e)
         {
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog
@@ -121,6 +122,7 @@ namespace TTS_Translator
             }
         }
 
+        //Update image
         private void URLtable_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             string deleteSpecial(string s)
@@ -156,6 +158,7 @@ namespace TTS_Translator
             }
         }
 
+        //Add image
         private void URLtable_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (URLtable.CurrentCell.Column.Header.ToString().Equals("New"))
@@ -178,10 +181,49 @@ namespace TTS_Translator
             }
         }
 
+        //Dynamic image size
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             Image_Original.Height = (Stackpanel_image.ActualHeight - 26) / 2;
             Image_New.Height = (Stackpanel_image.ActualHeight - 26) / 2;
+        }
+
+        private void Button_load_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        //Save current work
+        private void Button_Save_Click(object sender, RoutedEventArgs e)
+        {
+            var savejson = new JObject();
+            savejson.Add("Original JSON", TB_JSON_path.Text);
+            savejson.Add("Mods folder", TB_mod_folder_path.Text);
+            var dttable = new JArray();
+            foreach (DataRowView s in URLtable.Items)
+            {
+                var jo = new JObject();
+                jo.Add("Original", s[1].ToString());
+                jo.Add("New", s[2].ToString());
+                dttable.Add(jo);
+            }
+
+            savejson.Add("data", dttable);
+
+            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog
+            {
+                InitialDirectory = TB_mod_folder_path.Text,
+                Title = "Save Current Work",
+                DefaultExt = "tss",
+                Filter = "TTS-translator save(*.tss)|*.tss"
+            };
+
+            Nullable<bool> result = dlg.ShowDialog();
+
+            if (result == true)
+            {
+                File.WriteAllText(dlg.FileName, savejson.ToString());
+            }
         }
     }
 }
