@@ -356,6 +356,7 @@ namespace TTS_Translator
 
         private void Button_Analyze_Click(object sender, RoutedEventArgs e)
         {
+            if (!saveOpened) return;
             foreach (DataRowView s in URLtable.ItemsSource)
             {
                 try
@@ -370,7 +371,8 @@ namespace TTS_Translator
                 }
                 catch
                 {
-                    return;
+                    DataGridRow dgr = URLtable.ItemContainerGenerator.ContainerFromItem(s) as DataGridRow;
+                    dgr.Background = System.Windows.Media.Brushes.Red;
                 }
             }
             
