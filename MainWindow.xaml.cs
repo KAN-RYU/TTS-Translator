@@ -78,7 +78,7 @@ namespace TTS_Translator
                                 urls.Add(tmp["ImageSecondaryURL"].ToString());
                             }
                         }
-                        else if (ob["Name"].ToString().Equals("Deck") || ob["Name"].ToString().Equals("DeckCustom"))
+                        else if (ob["Name"].ToString().Equals("Deck") || ob["Name"].ToString().Equals("DeckCustom") || ob["Name"].ToString().Equals("Card"))
                         {
                             foreach (var x in (JObject)ob["CustomDeck"])
                             {
