@@ -144,7 +144,7 @@ namespace TTS_Translator
             {
                 row = (DataRowView)URLtable.SelectedItems[0];
             }
-            catch (ArgumentOutOfRangeException)
+            catch
             {
                 return;
             }
@@ -166,7 +166,7 @@ namespace TTS_Translator
                 {
                     Image_New.Source = new BitmapImage(new Uri(row["New"].ToString(), UriKind.Absolute));
                 }
-                catch (FileNotFoundException)
+                catch
                 {
                     Image_New.Source = new BitmapImage();
                 }
@@ -313,7 +313,7 @@ namespace TTS_Translator
                         File.Copy(files[0], folderpath + @"\" + Path.GetFileName(files[0]), true);
                         ProgressB.Value += 1;
                     }
-                    catch (FileNotFoundException)
+                    catch
                     {
                         ProgressB.Value += 1;
                     }
