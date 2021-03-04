@@ -17,7 +17,14 @@ namespace TTS_Translator
     /// </summary>
     public partial class MainWindow : Window
     {
-        bool saveOpened = false;
+        private bool saveOpened = false;
+
+        //Delete Special Characters
+        string deleteSpecial(string s)
+        {
+            return s.Replace(":", "").Replace("/", "").Replace("-", "").Replace("=", "").Replace("?", "").Replace(".", "").Replace("%", "");
+        }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -33,6 +40,7 @@ namespace TTS_Translator
             {
                 DefaultExt = ".json",
                 Filter = "JSON (*.json)|*.json",
+                Title = "Open TTS save",
                 InitialDirectory = TB_JSON_path.Text
             };
 
@@ -111,6 +119,7 @@ namespace TTS_Translator
                 ValidateNames = false,
                 CheckFileExists = false,
                 CheckPathExists = true,
+                Title = "Select Mods folder",
                 FileName = "Select Folder"
             };
 
@@ -126,10 +135,7 @@ namespace TTS_Translator
         //Update image
         private void URLtable_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            string deleteSpecial(string s)
-            {
-                return s.Replace(":", "").Replace("/", "").Replace("-", "").Replace("=", "").Replace("?", "").Replace(".", "").Replace("%", "");
-            }
+            
             Image_Original.Source = new BitmapImage();
             Image_New.Source = new BitmapImage();
 
@@ -189,12 +195,14 @@ namespace TTS_Translator
             Image_New.Height = (Stackpanel_image.ActualHeight - 26) / 2;
         }
 
+        //Load work
         private void Button_load_Click(object sender, RoutedEventArgs e)
         {
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog
             {
                 DefaultExt = ".tss",
                 Filter = "TTS-translator save(*.tss)|*.tss",
+                Title = "Load work",
                 InitialDirectory = Environment.CurrentDirectory
             };
 
@@ -235,6 +243,7 @@ namespace TTS_Translator
         //Save current work
         private void Button_Save_Click(object sender, RoutedEventArgs e)
         {
+            if (!this.saveOpened) return;
             var savejson = new JObject();
             savejson.Add("Original JSON", TB_JSON_path.Text);
             savejson.Add("Mods folder", TB_mod_folder_path.Text);
@@ -264,6 +273,36 @@ namespace TTS_Translator
             if (result == true)
             {
                 File.WriteAllText(dlg.FileName, savejson.ToString());
+            }
+        }
+
+        //Backup Images
+        private void Button_Backup_Images_Click(object sender, RoutedEventArgs e)
+        {
+            if (!this.saveOpened) return;
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog
+            {
+                InitialDirectory = Environment.CurrentDirectory,
+                ValidateNames = false,
+                CheckFileExists = false,
+                CheckPathExists = true,
+                Title = "Select Backup folder",
+                FileName = "Select Folder"
+            };
+
+            Nullable<bool> result = dlg.ShowDialog();
+
+            if (result == true)
+            {
+                string folderpath = System.IO.Path.GetDirectoryName(dlg.FileName);
+                ProgressB.Value = 0;
+                ProgressB.Maximum = URLtable.Items.Count;
+                foreach (DataRowView s in URLtable.Items)
+                {
+                    string[] files = Directory.GetFiles(TB_mod_folder_path.Text + @"\Images\", deleteSpecial(s["original"].ToString()) + ".*");
+                    File.Copy(files[0], folderpath + @"\" + Path.GetFileName(files[0]), true);
+                    ProgressB.Value += 1;
+                }
             }
         }
     }
