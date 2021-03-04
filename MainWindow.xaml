@@ -18,7 +18,7 @@
         <Button x:Name="Button_load" Content="Load" HorizontalAlignment="Left" Margin="10,52,0,0" VerticalAlignment="Top" Width="95" Click="Button_load_Click"/>
         <Button x:Name="Button_Save" Content="Save" HorizontalAlignment="Left" Margin="110,52,0,0" VerticalAlignment="Top" Width="95" Grid.ColumnSpan="2" Click="Button_Save_Click"/>
         <Button x:Name="Button_Backup_Images" Content="Backup Images" HorizontalAlignment="Left" Margin="210,52,0,0" VerticalAlignment="Top" Width="95" Click="Button_Backup_Images_Click"/>
-        <Button x:Name="Button_Export" Content="Export" HorizontalAlignment="Left" Margin="310,52,0,0" VerticalAlignment="Top" Width="95"/>
+        <Button x:Name="Button_Export" Content="Export" HorizontalAlignment="Left" Margin="310,52,0,0" VerticalAlignment="Top" Width="95" Click="Button_Export_Click"/>
 
         <DataGrid x:Name="URLtable"
                   HorizontalAlignment="Left" Margin="10,77,0,10" Width="800" ColumnWidth="*"

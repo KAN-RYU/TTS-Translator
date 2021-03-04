@@ -305,5 +305,38 @@ namespace TTS_Translator
                 }
             }
         }
+
+        private void Button_Export_Click(object sender, RoutedEventArgs e)
+        {
+            if (!saveOpened) return;
+            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog
+            {
+                InitialDirectory = TB_JSON_path.Text,
+                Title = "Export JSON",
+                DefaultExt = ".json",
+                Filter = "TTS save(*.json)|*.json"
+            };
+
+            Nullable<bool> result = dlg.ShowDialog();
+
+            if (result == true)
+            {
+                ProgressB.Value = 0;
+                ProgressB.Maximum = URLtable.Items.Count;
+                using (StreamReader jsonSave = File.OpenText(TB_JSON_path.Text))
+                {
+                    string saveData = jsonSave.ReadToEnd();
+                    foreach (DataRowView s in URLtable.Items)
+                    {
+                        if(!((string)s["New"]).Equals(""))
+                        {
+                            saveData = saveData.Replace(s["Original"].ToString(), @"file:///" + s["New"].ToString().Replace("\\", "\\\\"));
+                        }
+                        ProgressB.Value += 1;
+                    }
+                    File.WriteAllText(dlg.FileName, saveData);
+                }
+            }
+        }
     }
 }
