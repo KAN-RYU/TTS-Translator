@@ -1,21 +1,14 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
+using System.Data;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.IO;
-using System.Data;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace TTS_Translator
 {
@@ -35,11 +28,12 @@ namespace TTS_Translator
         private void Button_JSON_open_Click(object sender, RoutedEventArgs e)
         {
             //Open save json and parsing
-            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
-
-            dlg.DefaultExt = ".json";
-            dlg.Filter = "JSON (*.json)|*.json";
-            dlg.InitialDirectory = TB_JSON_path.Text;
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog
+            {
+                DefaultExt = ".json",
+                Filter = "JSON (*.json)|*.json",
+                InitialDirectory = TB_JSON_path.Text
+            };
 
             Nullable<bool> result = dlg.ShowDialog();
 
@@ -57,18 +51,25 @@ namespace TTS_Translator
 
                 SortedSet<string> urls = new SortedSet<string>();
 
-                foreach(JObject ob in Objects)
+                foreach (JObject ob in Objects)
                 {
                     if (ob["Name"].ToString().Equals("Custom_Tile"))
                     {
                         JObject tmp = (JObject)ob["CustomImage"];
                         urls.Add(tmp["ImageURL"].ToString());
-                        urls.Add(tmp["ImageSecondaryURL"].ToString());
+                        if (!tmp["ImageSecondaryURL"].ToString().Equals(""))
+                        {
+                            urls.Add(tmp["ImageSecondaryURL"].ToString());
+                        }
                     }
                     else if (ob["Name"].ToString().Equals("Custom_Token"))
                     {
                         JObject tmp = (JObject)ob["CustomImage"];
                         urls.Add(tmp["ImageURL"].ToString());
+                        if (!tmp["ImageSecondaryURL"].ToString().Equals(""))
+                        {
+                            urls.Add(tmp["ImageSecondaryURL"].ToString());
+                        }
                     }
                     else if (ob["Name"].ToString().Equals("Deck") || ob["Name"].ToString().Equals("DeckCustom"))
                     {
@@ -93,18 +94,21 @@ namespace TTS_Translator
                     dt.Rows.Add(new string[] { idx.ToString(), ua[idx], "" });
                 }
                 URLtable.ItemsSource = dt.DefaultView;
+                URLtable.IsReadOnly = true;
+                URLtable.SelectionMode = DataGridSelectionMode.Single;
             }
         }
 
         private void Button_mods_open_Click(object sender, RoutedEventArgs e)
         {
-            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
-
-            dlg.InitialDirectory = TB_mod_folder_path.Text;
-            dlg.ValidateNames = false;
-            dlg.CheckFileExists = false;
-            dlg.CheckPathExists = true;
-            dlg.FileName = "Select Folder";
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog
+            {
+                InitialDirectory = TB_mod_folder_path.Text,
+                ValidateNames = false,
+                CheckFileExists = false,
+                CheckPathExists = true,
+                FileName = "Select Folder"
+            };
 
             Nullable<bool> result = dlg.ShowDialog();
 
@@ -119,34 +123,57 @@ namespace TTS_Translator
         {
             string deleteSpecial(string s)
             {
-                return s.Replace(":", "").Replace("/", "").Replace("-", "").Replace("=", "").Replace("?", "").Replace(".", "");
+                return s.Replace(":", "").Replace("/", "").Replace("-", "").Replace("=", "").Replace("?", "").Replace(".", "").Replace("%", "");
             }
             Image_Original.Source = new BitmapImage();
+            Image_New.Source = new BitmapImage();
 
+            DataRowView row = (DataRowView)URLtable.SelectedItems[0];
             try
             {
-                DataRowView row = (DataRowView)URLtable.SelectedItems[0];
+                string[] files = Directory.GetFiles(TB_mod_folder_path.Text + @"\Images\", deleteSpecial(row["original"].ToString()) + ".*");
+                Image_Original.Source = new BitmapImage(new Uri(files[0], UriKind.Absolute));
+            }
+            catch (FileNotFoundException)
+            {
+                Image_Original.Source = new BitmapImage();
+            }
+
+            row = (DataRowView)URLtable.SelectedItems[0];
+            if (!row["New"].ToString().Equals(""))
+            {
                 try
                 {
-                    Image_Original.Source = new BitmapImage(new Uri(TB_mod_folder_path.Text + @"\Images\" + deleteSpecial(row["original"].ToString()) + ".png", UriKind.Absolute));
+                    System.Console.WriteLine(row["New"].ToString());
+                    Image_New.Source = new BitmapImage(new Uri(row["New"].ToString(), UriKind.Absolute));
                 }
                 catch (FileNotFoundException)
                 {
-                    try
-                    {
-                        Image_Original.Source = new BitmapImage(new Uri(TB_mod_folder_path.Text + @"\Images\" + deleteSpecial(row["original"].ToString()) + ".jpg", UriKind.Absolute));
-                    }
-                    catch (FileNotFoundException)
-                    {
-                        Image_Original.Source = new BitmapImage();
-                    }
+                    Image_New.Source = new BitmapImage();
                 }
             }
-            catch(InvalidCastException)
+        }
+
+        private void URLtable_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (URLtable.CurrentCell.Column.Header.ToString().Equals("New"))
             {
-                return;
+                Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog
+                {
+                    DefaultExt = ".png",
+                    Filter = "Image Files (*.png;*.jpg;*.jpeg)|*.png;*.jpg;*.jpeg",
+                    InitialDirectory = TB_JSON_path.Text
+                };
+
+                Nullable<bool> result = dlg.ShowDialog();
+
+                if (result == true)
+                {
+                    string filename = dlg.FileName;
+                    ((DataRowView)URLtable.CurrentCell.Item)["New"] = filename;
+                }
+                URLtable_SelectionChanged(null, null);
             }
-            
         }
     }
 }

@@ -14,7 +14,7 @@
         <TextBox x:Name="TB_mod_folder_path" Height="20" Margin="107,30,62,0" TextWrapping="Wrap" Text="C:\Users\__\Documents\My Games\Tabletop Simulator\Mods" VerticalAlignment="Top"/>
         <Button x:Name="Button_mods_open" Content="Open" HorizontalAlignment="Right" Height="20" Margin="0,30,8,0" VerticalAlignment="Top" Width="54" Click="Button_mods_open_Click"/>
         <Button x:Name="Button_Backup_Images" Content="Backup Images" HorizontalAlignment="Left" Margin="210,52,0,0" VerticalAlignment="Top" Width="95"/>
-        <DataGrid x:Name="URLtable" HorizontalAlignment="Left" Margin="10,77,0,10" Width="800" SelectionChanged="URLtable_SelectionChanged"/>
+        <DataGrid x:Name="URLtable" HorizontalAlignment="Left" Margin="10,77,0,10" Width="800" SelectionChanged="URLtable_SelectionChanged" MouseDoubleClick="URLtable_MouseDoubleClick"/>
         <Button x:Name="Button_load" Content="Load" HorizontalAlignment="Left" Margin="10,52,0,0" VerticalAlignment="Top" Width="95"/>
         <Button x:Name="Button_Save" Content="Save" HorizontalAlignment="Left" Margin="110,52,0,0" VerticalAlignment="Top" Width="95"/>
         <Button x:Name="Button_Export" Content="Export" HorizontalAlignment="Left" Margin="310,52,0,0" VerticalAlignment="Top" Width="95"/>
