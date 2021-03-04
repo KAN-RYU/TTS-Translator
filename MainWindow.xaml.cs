@@ -96,6 +96,8 @@ namespace TTS_Translator
                 URLtable.ItemsSource = dt.DefaultView;
                 URLtable.IsReadOnly = true;
                 URLtable.SelectionMode = DataGridSelectionMode.Single;
+                URLtable.Columns[0].Width = DataGridLength.SizeToCells;
+                URLtable.Columns[1].MaxWidth = 380;
             }
         }
 
@@ -174,6 +176,12 @@ namespace TTS_Translator
                 }
                 URLtable_SelectionChanged(null, null);
             }
+        }
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            Image_Original.Height = (Stackpanel_image.ActualHeight - 26) / 2;
+            Image_New.Height = (Stackpanel_image.ActualHeight - 26) / 2;
         }
     }
 }
