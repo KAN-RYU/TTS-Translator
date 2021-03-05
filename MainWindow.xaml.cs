@@ -53,50 +53,65 @@ namespace TTS_Translator
                 using (StreamReader jsonSave = File.OpenText(TB_JSON_path.Text))
                 using (JsonTextReader reader = new JsonTextReader(jsonSave))
                 {
-                    JObject jsonO = (JObject)JToken.ReadFrom(reader);
-                    JArray Objects = (JArray)jsonO["ObjectStates"];
-
-                    SortedSet<string> urls = new SortedSet<string>();
-
-                    foreach (JObject ob in Objects)
+                    string[] FindURL(JArray Objects)
                     {
-                        if (ob["Name"].ToString().Equals("Custom_Tile"))
+                        SortedSet<string> urls = new SortedSet<string>();
+                        if (Objects == null) return urls.ToArray();
+                        foreach (JObject ob in Objects)
                         {
-                            JObject tmp = (JObject)ob["CustomImage"];
-                            urls.Add(tmp["ImageURL"].ToString());
-                            if (!tmp["ImageSecondaryURL"].ToString().Equals(""))
+                            if (ob["Name"].ToString().Equals("Custom_Tile"))
                             {
-                                urls.Add(tmp["ImageSecondaryURL"].ToString());
+                                JObject tmp = (JObject)ob["CustomImage"];
+                                urls.Add(tmp["ImageURL"].ToString());
+                                if (!tmp["ImageSecondaryURL"].ToString().Equals(""))
+                                {
+                                    urls.Add(tmp["ImageSecondaryURL"].ToString());
+                                }
+                            }
+                            else if (ob["Name"].ToString().Equals("Custom_Token"))
+                            {
+                                JObject tmp = (JObject)ob["CustomImage"];
+                                urls.Add(tmp["ImageURL"].ToString());
+                                if (!tmp["ImageSecondaryURL"].ToString().Equals(""))
+                                {
+                                    urls.Add(tmp["ImageSecondaryURL"].ToString());
+                                }
+                            }
+                            else if (ob["Name"].ToString().Equals("Deck") || ob["Name"].ToString().Equals("DeckCustom") || ob["Name"].ToString().Equals("Card"))
+                            {
+                                foreach (var x in (JObject)ob["CustomDeck"])
+                                {
+                                    string name = x.Key;
+                                    JObject tmp = (JObject)x.Value;
+                                    urls.Add(tmp["FaceURL"].ToString());
+                                    urls.Add(tmp["BackURL"].ToString());
+                                }
+                            }
+                            else if (ob["Name"].ToString().Equals("Custom_Model_Infinite_Bag") ||
+                                     ob["Name"].ToString().Equals("Custom_Model_Bag") ||
+                                     ob["Name"].ToString().Equals("Bag") ||
+                                     ob["Name"].ToString().Equals("Infinite_Bag"))
+                            {
+                                string[] tmp = FindURL((JArray)ob["ContainedObjects"]);
+                                foreach (string s in tmp)
+                                {
+                                    urls.Add(s);
+                                }
                             }
                         }
-                        else if (ob["Name"].ToString().Equals("Custom_Token"))
-                        {
-                            JObject tmp = (JObject)ob["CustomImage"];
-                            urls.Add(tmp["ImageURL"].ToString());
-                            if (!tmp["ImageSecondaryURL"].ToString().Equals(""))
-                            {
-                                urls.Add(tmp["ImageSecondaryURL"].ToString());
-                            }
-                        }
-                        else if (ob["Name"].ToString().Equals("Deck") || ob["Name"].ToString().Equals("DeckCustom") || ob["Name"].ToString().Equals("Card"))
-                        {
-                            foreach (var x in (JObject)ob["CustomDeck"])
-                            {
-                                string name = x.Key;
-                                JObject tmp = (JObject)x.Value;
-                                urls.Add(tmp["FaceURL"].ToString());
-                                urls.Add(tmp["BackURL"].ToString());
-                            }
-                        }
+                        return urls.ToArray();
                     }
+
+                    JObject jsonO = (JObject)JToken.ReadFrom(reader);
+                    
                     //System.Console.WriteLine(string.Join("\n", urls.ToArray()));
                     DataTable dt = new DataTable();
 
                     dt.Columns.Add("#", typeof(int));
                     dt.Columns.Add("Original", typeof(string));
                     dt.Columns.Add("New", typeof(string));
-                    string[] ua = urls.ToArray();
-                    for (int idx = 0; idx < urls.Count(); idx++)
+                    string[] ua = FindURL((JArray)jsonO["ObjectStates"]);
+                    for (int idx = 0; idx < ua.Count(); idx++)
                     {
                         dt.Rows.Add(new string[] { idx.ToString(), ua[idx], "" });
                     }
