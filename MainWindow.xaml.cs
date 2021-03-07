@@ -59,7 +59,8 @@ namespace TTS_Translator
                         if (Objects == null) return urls.ToArray();
                         foreach (JObject ob in Objects)
                         {
-                            if (ob["Name"].ToString().Equals("Custom_Tile"))
+                            if (ob["Name"].ToString().Equals("Custom_Tile") ||
+                                ob["Name"].ToString().Equals("Custom_Token"))
                             {
                                 JObject tmp = (JObject)ob["CustomImage"];
                                 urls.Add(tmp["ImageURL"].ToString());
@@ -68,16 +69,17 @@ namespace TTS_Translator
                                     urls.Add(tmp["ImageSecondaryURL"].ToString());
                                 }
                             }
-                            else if (ob["Name"].ToString().Equals("Custom_Token"))
+                            else if (ob["Name"].ToString().Equals("Custom_Model"))
                             {
-                                JObject tmp = (JObject)ob["CustomImage"];
-                                urls.Add(tmp["ImageURL"].ToString());
-                                if (!tmp["ImageSecondaryURL"].ToString().Equals(""))
+                                JObject tmp = (JObject)ob["CustomMesh"];
+                                if (!tmp["DiffuseURL"].ToString().Equals(""))
                                 {
-                                    urls.Add(tmp["ImageSecondaryURL"].ToString());
+                                    urls.Add(tmp["DiffuseURL"].ToString());
                                 }
                             }
-                            else if (ob["Name"].ToString().Equals("Deck") || ob["Name"].ToString().Equals("DeckCustom") || ob["Name"].ToString().Equals("Card"))
+                            else if (ob["Name"].ToString().Equals("Deck") ||
+                                     ob["Name"].ToString().Equals("DeckCustom") ||
+                                     ob["Name"].ToString().Equals("Card"))
                             {
                                 foreach (var x in (JObject)ob["CustomDeck"])
                                 {
