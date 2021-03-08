@@ -20,9 +20,9 @@ namespace TTS_Translator
         private bool saveOpened = false;
 
         //Delete Special Characters
-        string deleteSpecial(string s)
+        string DeleteSpecial(string s)
         {
-            return s.Replace(":", "").Replace("/", "").Replace("-", "").Replace("=", "").Replace("?", "").Replace(".", "").Replace("%", "");
+            return s.Replace(":", "").Replace("/", "").Replace("-", "").Replace("=", "").Replace("?", "").Replace(".", "").Replace("%", "").Replace("&", "");
         }
 
         public MainWindow()
@@ -60,10 +60,14 @@ namespace TTS_Translator
                         foreach (JObject ob in Objects)
                         {
                             if (ob["Name"].ToString().Equals("Custom_Tile") ||
-                                ob["Name"].ToString().Equals("Custom_Token"))
+                                ob["Name"].ToString().Equals("Custom_Token") ||
+                                ob["Name"].ToString().Equals("Figurine_Custom"))
                             {
                                 JObject tmp = (JObject)ob["CustomImage"];
-                                urls.Add(tmp["ImageURL"].ToString());
+                                if (!urls.Add(tmp["ImageURL"].ToString()).Equals(""))
+                                {
+                                    urls.Add(tmp["ImageURL"].ToString());
+                                }
                                 if (!tmp["ImageSecondaryURL"].ToString().Equals(""))
                                 {
                                     urls.Add(tmp["ImageSecondaryURL"].ToString());
@@ -90,8 +94,20 @@ namespace TTS_Translator
                                 }
                             }
                             else if (ob["Name"].ToString().Equals("Custom_Model_Infinite_Bag") ||
-                                     ob["Name"].ToString().Equals("Custom_Model_Bag") ||
-                                     ob["Name"].ToString().Equals("Bag") ||
+                                     ob["Name"].ToString().Equals("Custom_Model_Bag"))
+                            {
+                                JObject tmpo = (JObject)ob["CustomMesh"];
+                                if (!tmpo["DiffuseURL"].ToString().Equals(""))
+                                {
+                                    urls.Add(tmpo["DiffuseURL"].ToString());
+                                }
+                                string[] tmp = FindURL((JArray)ob["ContainedObjects"]);
+                                foreach (string s in tmp)
+                                {
+                                    urls.Add(s);
+                                }
+                            }
+                            else if (ob["Name"].ToString().Equals("Bag") ||
                                      ob["Name"].ToString().Equals("Infinite_Bag"))
                             {
                                 string[] tmp = FindURL((JArray)ob["ContainedObjects"]);
@@ -168,7 +184,7 @@ namespace TTS_Translator
             
             try
             {
-                string[] files = Directory.GetFiles(TB_mod_folder_path.Text + @"\Images\", deleteSpecial(row["original"].ToString()) + ".*");
+                string[] files = Directory.GetFiles(TB_mod_folder_path.Text + @"\Images\", DeleteSpecial(row["original"].ToString()) + ".*");
                 Image_Original.Source = new BitmapImage(new Uri(files[0], UriKind.Absolute));
             }
             catch
@@ -326,7 +342,7 @@ namespace TTS_Translator
                 {
                     try
                     {
-                        string[] files = Directory.GetFiles(TB_mod_folder_path.Text + @"\Images\", deleteSpecial(s["original"].ToString()) + ".*");
+                        string[] files = Directory.GetFiles(TB_mod_folder_path.Text + @"\Images\", DeleteSpecial(s["original"].ToString()) + ".*");
                         File.Copy(files[0], folderpath + @"\" + Path.GetFileName(files[0]), true);
                         ProgressB.Value += 1;
                     }
@@ -378,7 +394,7 @@ namespace TTS_Translator
             {
                 try
                 {
-                    string[] files = Directory.GetFiles(TB_mod_folder_path.Text + @"\Images\", deleteSpecial(s["original"].ToString()) + ".*");
+                    string[] files = Directory.GetFiles(TB_mod_folder_path.Text + @"\Images\", DeleteSpecial(s["original"].ToString()) + ".*");
                     DataGridRow dgr = URLtable.ItemContainerGenerator.ContainerFromItem(s) as DataGridRow;
                     dgr.Background = System.Windows.Media.Brushes.Green;
                     if (files.Length == 0)
