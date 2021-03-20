@@ -83,7 +83,8 @@ namespace TTS_Translator
                             }
                             else if (ob["Name"].ToString().Equals("Deck") ||
                                      ob["Name"].ToString().Equals("DeckCustom") ||
-                                     ob["Name"].ToString().Equals("Card"))
+                                     ob["Name"].ToString().Equals("Card") ||
+                                     ob["Name"].ToString().Equals("CardCustom"))
                             {
                                 foreach (var x in (JObject)ob["CustomDeck"])
                                 {
