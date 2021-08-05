@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -22,15 +23,23 @@ namespace TTS_Translator
         //Delete Special Characters
         string DeleteSpecial(string s)
         {
-            return s.Replace(":", "").Replace("/", "").Replace("-", "").Replace("=", "").Replace("?", "").Replace(".", "").Replace("%", "").Replace("&", "");
+            return s.Replace(":", "").Replace("/", "").Replace("-", "").Replace("=", "").Replace("?", "").Replace(".", "").Replace("%", "").Replace("&", "").Replace("_","");
         }
 
         public MainWindow()
         {
             InitializeComponent();
             TB_JSON_path.Text = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\My Games\Tabletop Simulator\Saves";
+            //TB_JSON_path.Text = @"F:\SteamLibrary\steamapps\common\Tabletop Simulator\Tabletop Simulator_Data\Mods";
             TB_mod_folder_path.Text = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\My Games\Tabletop Simulator\Mods";
             //TB_mod_folder_path.Text = @"F:\SteamLibrary\steamapps\common\Tabletop Simulator\Tabletop Simulator_Data\Mods";
+
+            string strVersionText = Assembly.GetExecutingAssembly().FullName
+                                    .Split(',')[1]
+                                    .Trim()
+                                    .Split('=')[1];
+
+            Title = Title + " " +  strVersionText;
         }
 
         //Open save json and parsing
@@ -71,6 +80,20 @@ namespace TTS_Translator
                                 if (!tmp["ImageSecondaryURL"].ToString().Equals(""))
                                 {
                                     urls.Add(tmp["ImageSecondaryURL"].ToString());
+                                }
+                                if (ob.ContainsKey("States"))
+                                {
+                                    JObject tmpO = (JObject)ob["States"];
+                                    JArray tmpA = new JArray();
+                                    foreach (JProperty t in tmpO.Properties())
+                                    {
+                                        tmpA.Add(t.First);
+                                    }
+                                    string[] tmp1 = FindURL(tmpA);
+                                    foreach (string s in tmp1)
+                                    {
+                                        urls.Add(s);
+                                    }
                                 }
                             }
                             else if (ob["Name"].ToString().Equals("Custom_Model"))
