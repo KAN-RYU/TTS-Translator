@@ -81,6 +81,20 @@ namespace TTS_Translator
                                 {
                                     urls.Add(tmp["ImageSecondaryURL"].ToString());
                                 }
+                                if (ob.ContainsKey("States"))
+                                {
+                                    JObject tmpO = (JObject)ob["States"];
+                                    JArray tmpA = new JArray();
+                                    foreach (JProperty t in tmpO.Properties())
+                                    {
+                                        tmpA.Add(t.First);
+                                    }
+                                    string[] tmp1 = FindURL(tmpA);
+                                    foreach (string s in tmp1)
+                                    {
+                                        urls.Add(s);
+                                    }
+                                }
                             }
                             else if (ob["Name"].ToString().Equals("Custom_Model"))
                             {
