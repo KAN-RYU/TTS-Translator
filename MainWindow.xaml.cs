@@ -23,7 +23,7 @@ namespace TTS_Translator
         //Delete Special Characters
         string DeleteSpecial(string s)
         {
-            return s.Replace(":", "").Replace("/", "").Replace("-", "").Replace("=", "").Replace("?", "").Replace(".", "").Replace("%", "").Replace("&", "");
+            return s.Replace(":", "").Replace("/", "").Replace("-", "").Replace("=", "").Replace("?", "").Replace(".", "").Replace("%", "").Replace("&", "").Replace("_","");
         }
 
         public MainWindow()
