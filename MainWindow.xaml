@@ -20,7 +20,8 @@
         <Button x:Name="Button_Backup_Images" Content="Backup Images" HorizontalAlignment="Left" Margin="210,52,0,0" VerticalAlignment="Top" Width="95" Click="Button_Backup_Images_Click"/>
         <Button x:Name="Button_Export" Content="Export" HorizontalAlignment="Left" Margin="310,52,0,0" VerticalAlignment="Top" Width="95" Click="Button_Export_Click"/>
         <Button x:Name="Button_Analyze" Content="Analyze" HorizontalAlignment="Left" Margin="410,52,0,0" VerticalAlignment="Top" Width="95" Click="Button_Analyze_Click"/>
-        
+        <Button x:Name="Button_Replace" Content="Replace All" HorizontalAlignment="Left" Margin="510,52,0,0" VerticalAlignment="Top" Width="95" Click="Button_Replace_Click"/>
+
         <DataGrid x:Name="URLtable" VirtualizingPanel.IsVirtualizing="False"
                   HorizontalAlignment="Left" Margin="10,77,0,10" Width="800" ColumnWidth="*"
                   SelectionChanged="URLtable_SelectionChanged" MouseDoubleClick="URLtable_MouseDoubleClick"/>
@@ -29,7 +30,7 @@
             <Label Content="▲Original  New▼" HorizontalAlignment="Center" Margin="10,0,0,0" VerticalAlignment="Top"/>
             <Image x:Name="Image_New" VerticalAlignment="Bottom" Height="350"/>
         </StackPanel>
-        <ProgressBar x:Name="ProgressB" Height="17" Margin="510,55,10,0" VerticalAlignment="Top"/>
+        <ProgressBar x:Name="ProgressB" Height="17" Margin="610,55,10,0" VerticalAlignment="Top"/>
         
     </Grid>
 </Window>

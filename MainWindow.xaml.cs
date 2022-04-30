@@ -434,5 +434,24 @@ namespace TTS_Translator
             }
             
         }
+
+        private void Button_Replace_Click(object sender, RoutedEventArgs e)
+        {
+            if (!saveOpened) return;
+            Button_Analyze_Click(sender, e);
+            foreach (DataRowView s in URLtable.ItemsSource)
+            {
+                try
+                {
+                    string[] files = Directory.GetFiles(TB_mod_folder_path.Text + @"\Images\", DeleteSpecial(s["original"].ToString()) + ".*");
+                    s["New"] = files[0];
+                }
+                catch
+                {
+                    s["New"] = "";
+                }
+            }
+
+        }
     }
 }
