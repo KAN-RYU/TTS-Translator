@@ -103,6 +103,20 @@ namespace TTS_Translator
                                 {
                                     urls.Add(tmp["DiffuseURL"].ToString());
                                 }
+                                if (ob.ContainsKey("States"))
+                                {
+                                    JObject tmpO = (JObject)ob["States"];
+                                    JArray tmpA = new JArray();
+                                    foreach (JProperty t in tmpO.Properties())
+                                    {
+                                        tmpA.Add(t.First);
+                                    }
+                                    string[] tmp1 = FindURL(tmpA);
+                                    foreach (string s in tmp1)
+                                    {
+                                        urls.Add(s);
+                                    }
+                                }
                             }
                             else if (ob["Name"].ToString().Equals("Deck") ||
                                      ob["Name"].ToString().Equals("DeckCustom") ||
@@ -115,6 +129,20 @@ namespace TTS_Translator
                                     JObject tmp = (JObject)x.Value;
                                     urls.Add(tmp["FaceURL"].ToString());
                                     urls.Add(tmp["BackURL"].ToString());
+                                }
+                                if (ob.ContainsKey("States"))
+                                {
+                                    JObject tmpO = (JObject)ob["States"];
+                                    JArray tmpA = new JArray();
+                                    foreach (JProperty t in tmpO.Properties())
+                                    {
+                                        tmpA.Add(t.First);
+                                    }
+                                    string[] tmp1 = FindURL(tmpA);
+                                    foreach (string s in tmp1)
+                                    {
+                                        urls.Add(s);
+                                    }
                                 }
                             }
                             else if (ob["Name"].ToString().Equals("Custom_Model_Infinite_Bag") ||
