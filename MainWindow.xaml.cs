@@ -144,6 +144,14 @@ namespace TTS_Translator
                                         urls.Add(s);
                                     }
                                 }
+                                if (ob.ContainsKey("ContainedObjects"))
+                                {
+                                    string[] tmp = FindURL((JArray)ob["ContainedObjects"]);
+                                    foreach (string s in tmp)
+                                    {
+                                        urls.Add(s);
+                                    }
+                                }
                             }
                             else if (ob["Name"].ToString().Equals("Custom_Model_Infinite_Bag") ||
                                      ob["Name"].ToString().Equals("Custom_Model_Bag"))
