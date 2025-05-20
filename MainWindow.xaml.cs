@@ -252,7 +252,11 @@ namespace TTS_Translator
                 {
                     files = Directory.GetFiles(TB_mod_folder_path.Text + @"\Images\", DeleteSpecial(row["original"].ToString()).Replace("httpssteamusercontentaakamaihdnetugc", "httpcloud3steamusercontentcomugc") + ".*");
                 }
-                
+                if (files.Length == 0)
+                {
+                    files = Directory.GetFiles(TB_mod_folder_path.Text + @"\Images\", DeleteSpecial(row["original"].ToString()).Replace("httpcloud3steamusercontentcomugc", "httpssteamusercontentaakamaihdnetugc") + ".*");
+                }
+
                 Image_Original.Source = new BitmapImage(new Uri(files[0], UriKind.Absolute));
             }
             catch
@@ -466,6 +470,10 @@ namespace TTS_Translator
                     if (files.Length == 0)
                     {
                         files = Directory.GetFiles(TB_mod_folder_path.Text + @"\Images\", DeleteSpecial(s["original"].ToString()).Replace("httpssteamusercontentaakamaihdnetugc", "httpcloud3steamusercontentcomugc") + ".*");
+                    }
+                    if (files.Length == 0)
+                    {
+                        files = Directory.GetFiles(TB_mod_folder_path.Text + @"\Images\", DeleteSpecial(s["original"].ToString()).Replace("httpcloud3steamusercontentcomugc", "httpssteamusercontentaakamaihdnetugc") + ".*");
                     }
                     DataGridRow dgr = URLtable.ItemContainerGenerator.ContainerFromItem(s) as DataGridRow;
                     dgr.Background = System.Windows.Media.Brushes.Green;
