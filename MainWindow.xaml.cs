@@ -415,6 +415,14 @@ namespace TTS_Translator
                     try
                     {
                         string[] files = Directory.GetFiles(TB_mod_folder_path.Text + @"\Images\", DeleteSpecial(s["original"].ToString()) + ".*");
+                        if (files.Length == 0)
+                        {
+                            files = Directory.GetFiles(TB_mod_folder_path.Text + @"\Images\", DeleteSpecial(s["original"].ToString()).Replace("httpssteamusercontentaakamaihdnetugc", "httpcloud3steamusercontentcomugc") + ".*");
+                        }
+                        if (files.Length == 0)
+                        {
+                            files = Directory.GetFiles(TB_mod_folder_path.Text + @"\Images\", DeleteSpecial(s["original"].ToString()).Replace("httpcloud3steamusercontentcomugc", "httpssteamusercontentaakamaihdnetugc") + ".*");
+                        }
                         File.Copy(files[0], folderpath + @"\" + Path.GetFileName(files[0]), true);
                         ProgressB.Value += 1;
                     }
