@@ -103,18 +103,57 @@ namespace TTS_Translator
                                 {
                                     urls.Add(tmp["DiffuseURL"].ToString());
                                 }
+                                if (ob.ContainsKey("States"))
+                                {
+                                    JObject tmpO = (JObject)ob["States"];
+                                    JArray tmpA = new JArray();
+                                    foreach (JProperty t in tmpO.Properties())
+                                    {
+                                        tmpA.Add(t.First);
+                                    }
+                                    string[] tmp1 = FindURL(tmpA);
+                                    foreach (string s in tmp1)
+                                    {
+                                        urls.Add(s);
+                                    }
+                                }
                             }
                             else if (ob["Name"].ToString().Equals("Deck") ||
                                      ob["Name"].ToString().Equals("DeckCustom") ||
                                      ob["Name"].ToString().Equals("Card") ||
                                      ob["Name"].ToString().Equals("CardCustom"))
                             {
-                                foreach (var x in (JObject)ob["CustomDeck"])
+                                if (ob.ContainsKey("CustomDeck"))
                                 {
-                                    string name = x.Key;
-                                    JObject tmp = (JObject)x.Value;
-                                    urls.Add(tmp["FaceURL"].ToString());
-                                    urls.Add(tmp["BackURL"].ToString());
+                                    foreach (var x in (JObject)ob["CustomDeck"])
+                                    {
+                                        string name = x.Key;
+                                        JObject tmp = (JObject)x.Value;
+                                        urls.Add(tmp["FaceURL"].ToString());
+                                        urls.Add(tmp["BackURL"].ToString());
+                                    }
+                                }
+                                if (ob.ContainsKey("States"))
+                                {
+                                    JObject tmpO = (JObject)ob["States"];
+                                    JArray tmpA = new JArray();
+                                    foreach (JProperty t in tmpO.Properties())
+                                    {
+                                        tmpA.Add(t.First);
+                                    }
+                                    string[] tmp1 = FindURL(tmpA);
+                                    foreach (string s in tmp1)
+                                    {
+                                        urls.Add(s);
+                                    }
+                                }
+                                if (ob.ContainsKey("ContainedObjects"))
+                                {
+                                    string[] tmp = FindURL((JArray)ob["ContainedObjects"]);
+                                    foreach (string s in tmp)
+                                    {
+                                        urls.Add(s);
+                                    }
                                 }
                             }
                             else if (ob["Name"].ToString().Equals("Custom_Model_Infinite_Bag") ||
@@ -209,6 +248,15 @@ namespace TTS_Translator
             try
             {
                 string[] files = Directory.GetFiles(TB_mod_folder_path.Text + @"\Images\", DeleteSpecial(row["original"].ToString()) + ".*");
+                if (files.Length == 0)
+                {
+                    files = Directory.GetFiles(TB_mod_folder_path.Text + @"\Images\", DeleteSpecial(row["original"].ToString()).Replace("httpssteamusercontentaakamaihdnetugc", "httpcloud3steamusercontentcomugc") + ".*");
+                }
+                if (files.Length == 0)
+                {
+                    files = Directory.GetFiles(TB_mod_folder_path.Text + @"\Images\", DeleteSpecial(row["original"].ToString()).Replace("httpcloud3steamusercontentcomugc", "httpssteamusercontentaakamaihdnetugc") + ".*");
+                }
+
                 Image_Original.Source = new BitmapImage(new Uri(files[0], UriKind.Absolute));
             }
             catch
@@ -367,6 +415,14 @@ namespace TTS_Translator
                     try
                     {
                         string[] files = Directory.GetFiles(TB_mod_folder_path.Text + @"\Images\", DeleteSpecial(s["original"].ToString()) + ".*");
+                        if (files.Length == 0)
+                        {
+                            files = Directory.GetFiles(TB_mod_folder_path.Text + @"\Images\", DeleteSpecial(s["original"].ToString()).Replace("httpssteamusercontentaakamaihdnetugc", "httpcloud3steamusercontentcomugc") + ".*");
+                        }
+                        if (files.Length == 0)
+                        {
+                            files = Directory.GetFiles(TB_mod_folder_path.Text + @"\Images\", DeleteSpecial(s["original"].ToString()).Replace("httpcloud3steamusercontentcomugc", "httpssteamusercontentaakamaihdnetugc") + ".*");
+                        }
                         File.Copy(files[0], folderpath + @"\" + Path.GetFileName(files[0]), true);
                         ProgressB.Value += 1;
                     }
@@ -419,6 +475,14 @@ namespace TTS_Translator
                 try
                 {
                     string[] files = Directory.GetFiles(TB_mod_folder_path.Text + @"\Images\", DeleteSpecial(s["original"].ToString()) + ".*");
+                    if (files.Length == 0)
+                    {
+                        files = Directory.GetFiles(TB_mod_folder_path.Text + @"\Images\", DeleteSpecial(s["original"].ToString()).Replace("httpssteamusercontentaakamaihdnetugc", "httpcloud3steamusercontentcomugc") + ".*");
+                    }
+                    if (files.Length == 0)
+                    {
+                        files = Directory.GetFiles(TB_mod_folder_path.Text + @"\Images\", DeleteSpecial(s["original"].ToString()).Replace("httpcloud3steamusercontentcomugc", "httpssteamusercontentaakamaihdnetugc") + ".*");
+                    }
                     DataGridRow dgr = URLtable.ItemContainerGenerator.ContainerFromItem(s) as DataGridRow;
                     dgr.Background = System.Windows.Media.Brushes.Green;
                     if (files.Length == 0)
