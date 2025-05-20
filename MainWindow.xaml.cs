@@ -123,12 +123,15 @@ namespace TTS_Translator
                                      ob["Name"].ToString().Equals("Card") ||
                                      ob["Name"].ToString().Equals("CardCustom"))
                             {
-                                foreach (var x in (JObject)ob["CustomDeck"])
+                                if (ob.ContainsKey("CustomDeck"))
                                 {
-                                    string name = x.Key;
-                                    JObject tmp = (JObject)x.Value;
-                                    urls.Add(tmp["FaceURL"].ToString());
-                                    urls.Add(tmp["BackURL"].ToString());
+                                    foreach (var x in (JObject)ob["CustomDeck"])
+                                    {
+                                        string name = x.Key;
+                                        JObject tmp = (JObject)x.Value;
+                                        urls.Add(tmp["FaceURL"].ToString());
+                                        urls.Add(tmp["BackURL"].ToString());
+                                    }
                                 }
                                 if (ob.ContainsKey("States"))
                                 {
@@ -245,6 +248,11 @@ namespace TTS_Translator
             try
             {
                 string[] files = Directory.GetFiles(TB_mod_folder_path.Text + @"\Images\", DeleteSpecial(row["original"].ToString()) + ".*");
+                if (files.Length == 0)
+                {
+                    files = Directory.GetFiles(TB_mod_folder_path.Text + @"\Images\", DeleteSpecial(row["original"].ToString()).Replace("httpssteamusercontentaakamaihdnetugc", "httpcloud3steamusercontentcomugc") + ".*");
+                }
+                
                 Image_Original.Source = new BitmapImage(new Uri(files[0], UriKind.Absolute));
             }
             catch
@@ -455,6 +463,10 @@ namespace TTS_Translator
                 try
                 {
                     string[] files = Directory.GetFiles(TB_mod_folder_path.Text + @"\Images\", DeleteSpecial(s["original"].ToString()) + ".*");
+                    if (files.Length == 0)
+                    {
+                        files = Directory.GetFiles(TB_mod_folder_path.Text + @"\Images\", DeleteSpecial(s["original"].ToString()).Replace("httpssteamusercontentaakamaihdnetugc", "httpcloud3steamusercontentcomugc") + ".*");
+                    }
                     DataGridRow dgr = URLtable.ItemContainerGenerator.ContainerFromItem(s) as DataGridRow;
                     dgr.Background = System.Windows.Media.Brushes.Green;
                     if (files.Length == 0)
